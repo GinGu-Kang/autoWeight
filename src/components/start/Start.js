@@ -27,8 +27,8 @@ class Start extends Component {
           justifyContent="space-evenly"
           alignItems="center">
             <Button sx={menuButton} href='/plan' color='info' variant="outlined">생산 계획<EditNoteIcon sx={{pl:5, fontSize:{xs:"25px",md:"35px"}}}></EditNoteIcon></Button>
-            <Button sx={menuButton} color='info' variant="outlined">작업 이력<PsychologyIcon  sx={{pl:5, fontSize:{xs:"25px",md:"35px"}}}></PsychologyIcon></Button>
-            <Button sx={menuButton} color='info' variant="outlined">환경 설정<SettingsIcon  sx={{pl:5, fontSize:{xs:"25px",md:"35px"}}}></SettingsIcon></Button>
+            {/* <Button sx={menuButton} color='info' variant="outlined">작업 이력<PsychologyIcon  sx={{pl:5, fontSize:{xs:"25px",md:"35px"}}}></PsychologyIcon></Button>
+            <Button sx={menuButton} color='info' variant="outlined">환경 설정<SettingsIcon  sx={{pl:5, fontSize:{xs:"25px",md:"35px"}}}></SettingsIcon></Button> */}
           </Grid>
       )
     }
@@ -36,7 +36,7 @@ class Start extends Component {
       <Container maxWidth={false} sx={{ padding: 0 }} disableGutters={true} >
         <Header></Header>
         <Grid container>
-          <Grid item xs="12">
+          <Grid item xs={12}>
             <Nav></Nav>
           </Grid>
         </Grid>

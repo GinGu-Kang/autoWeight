@@ -1,1 +1,11 @@
 {{display:'flex',alignContent:'center',justifyContent:'center',color:"#1976d2"}}
+
+
+## 디스패치
+const dispatch = useDispatch();
+    dispatch({ type:"PLUS" ,payload:{value:props.data}})
+    dispatch({ type:"SET" ,payload:{dataName:'weight',value:5}})
+    dispatch({ type:"SET" ,payload:{dataName:'weight',value:5}})
+
+#셀렉트
+const number = useSelector((state)=>state.number);

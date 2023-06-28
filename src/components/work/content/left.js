@@ -10,6 +10,9 @@ import ExposureIcon from '@mui/icons-material/Exposure';
 import Button from '@mui/material/Button'
 import SendIcon from '@mui/icons-material/Send';
 import {useDispatch,useSelector} from 'react-redux'
+import WifiOffIcon from '@mui/icons-material/WifiOff';
+import {useNavigate} from "react-router-dom";
+import {socket} from '../../socket/socket'
 
 
 function Item(props){
@@ -18,6 +21,7 @@ function Item(props){
             <Box sx={{fontSize:20,fontWeight: 'medium',width:"30%",display:'flex',justifyContent:'center',alignItems:'center'}}>{props.title}</Box>
             <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                 <TextField 
+                // onChange={}
                 InputProps={{
                     endAdornment:(<div>{props.unit}</div>),
                     startAdornment: (
@@ -37,12 +41,38 @@ function Item(props){
 
 
 
-
+//목표: 재연결 버튼 만들기
 const Left = ()=> {
-        const number = useSelector((state)=>state.number);
+        const allowance = useSelector((state)=>state.allowance);
+        const connectState = useSelector((state)=>state.connectState);
         const planRow = JSON.parse(useSelector((state)=>state.planRow));
-        // console.log(planRow)
+        const resultCnt = Number(JSON.parse(useSelector((state)=>state.resultCnt)));
+        const completeCnt = Number(JSON.parse(useSelector((state)=>state.completeCnt)));
+        let navigate = useNavigate();
+      
+        let connectColor = ''
+        let connectIcon = ''
+        let progress = Math.round((completeCnt/resultCnt)*100)
+        console.log(progress)
+        
+
+        if(isNaN(progress)){
+            progress=0
+        }
+        
         const dispatch = useDispatch();
+        // dispatch({ type:"SET" ,payload:{dataName:'allowance',value:0.1}})
+        if(connectState=='연결 확인'){
+            connectColor = 'red'
+            connectIcon = <WifiOffIcon sx={{color:connectColor}}/>
+        }else{
+            connectColor = 'blue'
+            connectIcon = <WifiIcon sx={{color:connectColor}}/>
+        }
+
+
+        
+        
         return(
             <Box sx={{display: 'flex',flexDirection: 'column', height:'100%'}}>
                 <Box component="form" sx={{display:'flex',width:'100%',height:'15%'}}>
@@ -52,17 +82,17 @@ const Left = ()=> {
                             InputProps={{
                                 startAdornment: (
                                 <InputAdornment position="start">
-                                    <WifiIcon sx={{color:'blue'}}/>
+                                    {connectIcon}
                                 </InputAdornment>
                                 ),
                             }}
                             
                          sx={{textAlign:'right',width:1}} 
                          size="medium" 
-                         defaultValue='정상' 
+                         value={connectState}
                          id='1' 
                          variant='standard' 
-                         inputProps={{min: 0, style: { marginTop:3,color:'blue',textAlign: 'center' ,fontSize:'20px'}}} 
+                         inputProps={{min: 0, style: { marginTop:3,color:connectColor,textAlign: 'center' ,fontSize:'20px'}}} 
                          ></TextField>
                     </Box>
                     
@@ -70,12 +100,22 @@ const Left = ()=> {
                 <Stack sx={{flexGrow:1,pb:'5%'}} spacing={0}>
                     <Item unit={<Box sx={{color:'white'}}>kg</Box>} icon={<DateRangeIcon />} title="의뢰 일자" value={planRow.eProcessDate}></Item>
                     <Item unit='kg' icon={<ScaleIcon/>} title="전체 중량" value={planRow.eTotalProduction}></Item>
-                    <Item unit='%' icon={<ScaleIcon/>} title="진행 상황" value="현재 중량 / 전체 중량"></Item>
-                    <Item unit='%' icon={<ExposureIcon/>} title="허용 오차" value="0.1 +-"></Item>
+                    <Item unit='%' icon={<ScaleIcon/>} title="진행 상황" value={progress+'.0'}></Item>
+                    <Item unit='%' icon={<ExposureIcon/>} title="허용 오차" value={allowance}></Item>
                     <Item unit={<Box sx={{color:'white'}}>kg</Box>} icon={<DateRangeIcon />} title="상품 번호" value={planRow.eProreqNum}></Item>
                 </Stack>
                 <Box sx={{height:'15%',display:'flex',justifyContent:'center',alignItems:'center'}}> 
                     <Button 
+                    //100% 확인
+                        onClick={function(){
+                            if(progress ==100){
+                                if(window.confirm("모든 원재료를 투입하셨습니다. \n작업을 완료 하시겠습니까?")){
+                                    dispatch({ type:"SET" ,payload:{dataName:'isPrjComplete',value:true}})
+                                }
+                            }else{
+                                alert(`완료되지 않은 원료를 확인해주세요. \n 진행률: ${progress}`)
+                            }
+                        }.bind(this)}
                         sx={{height:'80%',width:'80%',fontSize:30,fontWeight:'Bold'}} 
                         // disabled
                         variant='contained'>

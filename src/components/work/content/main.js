@@ -4,23 +4,20 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
-import { DataGrid, GridColDef, GridValueGetterParams,GridToolbarContainer,
-    GridToolbarDensitySelector,
-    GridToolbarColumnsButton,
-    GridToolbarFilterButton,
-    GridToolbarExport} from '@mui/x-data-grid';
+import {socket} from '../../socket/socket'
 import Grid from '@mui/material/Grid';
 import IconButton from '@mui/material/IconButton';
 import HomeIcon from '@mui/icons-material/Home';
 import ItemList from './ItemList'
 import {useSelector,useDispatch}from 'react-redux'
-
+import {useGridApiRef} from '@mui/x-data-grid';
 
 
 
 
 
 function Header (props){
+    
     return(
         <Grid container sx={{height:"100%",width:"100%"}} 
             justifyContent="space-between">
@@ -31,9 +28,9 @@ function Header (props){
             </Grid>
 
             <Grid sx={{background:'white',width:'100%',display:'flex', alignItems:'center',justifyContent:'space-around'}} item xs={2}>
-                <Button variant='outlined'>임시 저장</Button>
-                <Button variant='outlined'>전체 초기화</Button>
-                <IconButton>
+                {/* <Button variant='outlined'>임시 저장</Button>
+                <Button variant='outlined'>전체 초기화</Button> */}
+                <IconButton href="/">
                     <HomeIcon></HomeIcon>
                 </IconButton>
             </Grid>
@@ -45,11 +42,12 @@ function Header (props){
 
 
 
-const Main=()=>{
-        console.log()
+const Main=({getRef},prop)=>{
         const planRow = JSON.parse(useSelector((state)=>state.planRow));
-        // console.log(planRow)
         const dispatch = useDispatch();
+        socket.emit("isConnect")
+        socket.emit('work',planRow.eProreqNum)
+        
         return(
             <Grid 
             sx={{height:"100%",width:"100%"}} 
@@ -60,7 +58,7 @@ const Main=()=>{
                 </Grid>
 
                 <Grid item  sx={{height:"90%"}}>
-                    <ItemList></ItemList>
+                    <ItemList getRef={getRef} sendDataBtn={prop.hi} ></ItemList>
                 </Grid>
             </Grid>
         )
