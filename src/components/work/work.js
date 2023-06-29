@@ -47,7 +47,6 @@ const InjectData=(props)=>{
     
     const dispatch = useDispatch();
     dispatch({ type:"SETPlan" ,payload:{value:props.data}})
-    console.log(props.data)
     // dispatch({ type:"SET" ,payload:{dataName:'allowance',value:1}})
     return (<Box></Box>)
 }
