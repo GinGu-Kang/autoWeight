@@ -11,6 +11,7 @@ export default function counterReducer(state, action) {
             allowance:1,
             apiRef:{},
             isDataSend:false,
+            isDataSendWeight:0,
             isPrjComplete:false,//프로젝트 완료
             socket:0,
             calcNum:1,

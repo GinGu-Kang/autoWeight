@@ -138,14 +138,21 @@ const Footer =()=> {
     }
 
     const CHscaleSize = ()=>{
+        // console.log("scaleSize"+scaleSize)
+        
         if(scaleSize=='1'){
             dispatch({ type:"SET" ,payload:{dataName:'scaleSize',value:'2'}})
+            socket.emit("ch/scale","2");    
         }else if(scaleSize=='2'){
             dispatch({ type:"SET" ,payload:{dataName:'scaleSize',value:'3'}})
+            socket.emit("ch/scale","3");    
         }else{
             dispatch({ type:"SET" ,payload:{dataName:'scaleSize',value:'1'}})
+            socket.emit("ch/scale","1");    
         }
-        socket.emit("ch/scale",scaleSize);
+        
+        
+        
     }
 
 
@@ -215,14 +222,30 @@ const Footer =()=> {
                     <Button 
                         onClick={function(){
                             if(selectItem.eItemName!=undefined){
-                                dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:true}})  
+                                dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:true}})
+                                dispatch({ type:"SET" ,payload:{dataName:'isDataSendWeight',value:weight}})
                             }else{
                                 alert("재료를 선택 해주세요")
                             }
                         }.bind(this)}
                         className='hihi'
-                        sx={{width:'70%',height:'60%',fontSize:'40px'}} variant='contained' 
-                        disabled={Math.abs(Number(haveWeight))>Number(allowanceWeight)}>데이터 저장
+                        sx={{width:'70%',height:'25%',fontSize:'40px'}} variant='contained' 
+                        // disabled={Math.abs(Number(haveWeight))>Number(allowanceWeight)}>데이터 저장 //오차판단
+                        >데이터 저장
+                    </Button>
+                    <Button 
+                        onClick={function(){
+                            if(selectItem.eItemName!=undefined){
+                                let sendWeight = window.prompt("무게값을 입력해주세요")
+                                dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:true}})
+                                dispatch({ type:"SET" ,payload:{dataName:'isDataSendWeight',value:sendWeight}})
+                            }else{
+                                alert("재료를 선택 해주세요")
+                            }
+                        }.bind(this)}
+                        className='hihi'
+                        sx={{width:'70%',height:'25%',fontSize:'40px',mt:'10%'}} variant='contained' 
+                        >수동 저장
                     </Button>
                 </Stack>
 

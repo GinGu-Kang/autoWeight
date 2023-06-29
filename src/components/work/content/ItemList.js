@@ -126,6 +126,18 @@ const columns: GridColDef[] = [
 
     },
     {
+      field: 'eInputUnit',
+      headerName: '투입 중량',
+      flex:1,
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      flex:1,
+      headerAlign:'center',
+      align:'center',
+      editable:false
+
+    },
+    {
       field: 'eCapacityUnit',
       headerName: '단위',
       flex:1,
@@ -213,13 +225,16 @@ function workSelect(api,row,dispatch){
 
 const WeightDataGrid=({getRef},props)=>{
   const isDataSend = useSelector((state)=>state.isDataSend);
-  const isPrjComplete = useSelector((state)=>state.isPrjComplete);
+  let isPrjComplete = useSelector((state)=>state.isPrjComplete);
   const selectItem = useSelector((state)=>state.selectItem);
+  const isDataSendWeight = useSelector((state)=>state.isDataSendWeight);
+  const planRow = JSON.parse(useSelector((state)=>state.planRow));
   const apiRef = useGridApiRef();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let dataIndex =0;
   let isPrjData ={}
+
 
   let isBarcode = true;
   let barcodeKey = 'KeyQ'
@@ -241,6 +256,7 @@ const WeightDataGrid=({getRef},props)=>{
       resRow.map(data => {
         data.isCompleate="미완료"
         data.eBarCode=""
+        data.eInputUnit=""
         apiRef.current.updateRows([data])
           }
         )
@@ -253,11 +269,27 @@ const WeightDataGrid=({getRef},props)=>{
   
   //datalist 만들어 보내기
   //무게값이 꽉차지 않아도 보낼 수 있어야함
+  //패키징
+  //무게값 수동입력 버튼
+  //데이터 저장시 현재 무게값 같이 업데이트 
   if(isPrjComplete){
+    let totalWeight=0
+    let rowPrams=""
     isPrjData = apiRef.current.getAllRowIds().map(data =>{
       console.log(data)
-      let row = apiRef.current.getRow(data)
+      // let params = {
+      //   "eProreqNum": "W-236",   //생산지시번 호
+      //   "eTotalProduction": "1.000", //총 투입 량
+      //   "dataList[0].eBarCode": "R12150-230321-17", //투입 원자재의 바코드 번호
+      //   "dataList[0].eInputUnit": "1.000",        // 투입 량
+      // }
       
+
+      let row = apiRef.current.getRow(data)
+      // params+=`&dataList[${dataIndex}].eBarCode=${row.eBarCode}&dataList[${dataIndex}].eInputUnit=${row.eInputUnit}`
+
+      rowPrams+=`&dataList${encodeURIComponent("["+dataIndex+"].")}eBarCode=${row.eBarCode}&dataList${encodeURIComponent("["+dataIndex+"].")}eInputUnit=${row.eInputUnit}`
+            
       try {
             if(row.isCompleate=="완료"){
               console.log(row.eBarCode)
@@ -266,25 +298,30 @@ const WeightDataGrid=({getRef},props)=>{
           } catch (error) {
             console.log("로우 없음")
           }
+          totalWeight +=Number(row.eInputUnit)
           console.log(dataIndex+=1)
         }
       )
-      let params = {
-        "eProreqNum": "W-236",   //생산지시번 호
-        "eTotalProduction": "1.000", //총 투입 량
-        "dataList[0].eBarCode": "R12150-230321-17", //투입 원자재의 바코드 번호
-        "dataList[0].eInputUnit": "1.000",        // 투입 량
-      }
+      
     dataIndex=0
-    socket.emit("isPrjComplete",params)
+    
+    let params = `eProreqNum=${planRow.eProreqNum}&eTotalProduction=${totalWeight}`
+    console.log(params)
+    socket.emit("isPrjComplete",params+rowPrams)
     dispatch({ type:"SET" ,payload:{dataName:'isPrjComplete',value:false}})
     
   }
-
+  
+  console.log("소켓바깥")
   socket.on("isPrjComplete",isPrjComplete=>{
+    console.log("왜이래?")
     if(isPrjComplete){
-        alert("작업이 완료되었습니다.")
+        
+        // alert("작업이 완료되었습니다.")R12005-230321-17
         navigate("/plan");
+        console.log("뭐야 몇번실행되는거여")
+        dispatch({ type:"SET" ,payload:{dataName:'isPrjComplete',value:false}})
+        socket.removeAllListeners('isPrjComplete')
     }else{
         alert("작업이 실패 하였습니다.")
     }
@@ -337,8 +374,10 @@ const WeightDataGrid=({getRef},props)=>{
     try {
       if(isDataSend){
         apiRef.current.updateRows([{ eItemCode: selectItem.eItemCode, isCompleate: '완료'}]);
+        apiRef.current.updateRows([{ eItemCode: selectItem.eItemCode, eInputUnit: isDataSendWeight}]);
         dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:false}})   
         dispatch({ type:"SET" ,payload:{dataName:'selectItem',value:{}}})  
+        
 
 
         apiRef.current.getAllRowIds().map(data =>{
