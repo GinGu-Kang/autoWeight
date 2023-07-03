@@ -53,7 +53,6 @@ const Left = ()=> {
         let connectColor = ''
         let connectIcon = ''
         let progress = Math.round((completeCnt/resultCnt)*100)
-        console.log(progress)
         
 
         if(isNaN(progress)){

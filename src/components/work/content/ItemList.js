@@ -276,7 +276,6 @@ const WeightDataGrid=({getRef},props)=>{
     let totalWeight=0
     let rowPrams=""
     isPrjData = apiRef.current.getAllRowIds().map(data =>{
-      console.log(data)
       // let params = {
       //   "eProreqNum": "W-236",   //생산지시번 호
       //   "eTotalProduction": "1.000", //총 투입 량
@@ -292,34 +291,28 @@ const WeightDataGrid=({getRef},props)=>{
             
       try {
             if(row.isCompleate=="완료"){
-              console.log(row.eBarCode)
               dataIndex+=1
             }
           } catch (error) {
-            console.log("로우 없음")
           }
           totalWeight +=Number(row.eInputUnit)
-          console.log(dataIndex+=1)
+          dataIndex+=1
         }
       )
       
     dataIndex=0
     
     let params = `eProreqNum=${planRow.eProreqNum}&eTotalProduction=${totalWeight}`
-    console.log(params)
     socket.emit("isPrjComplete",params+rowPrams)
     dispatch({ type:"SET" ,payload:{dataName:'isPrjComplete',value:false}})
     
   }
   
-  console.log("소켓바깥")
   socket.on("isPrjComplete",isPrjComplete=>{
-    console.log("왜이래?")
     if(isPrjComplete){
         
         // alert("작업이 완료되었습니다.")R12005-230321-17
         navigate("/plan");
-        console.log("뭐야 몇번실행되는거여")
         dispatch({ type:"SET" ,payload:{dataName:'isPrjComplete',value:false}})
         socket.removeAllListeners('isPrjComplete')
     }else{
@@ -331,7 +324,6 @@ const WeightDataGrid=({getRef},props)=>{
 
     window.addEventListener('keydown',function(e){
         if(e.code=='Enter'){
-          console.log(barcodeBuffer)
           barcodeStart=barcodeBuffer.indexOf("R")
           barcodeEnd  = barcodeBuffer.indexOf("-")
           code = barcodeBuffer.slice(barcodeStart,barcodeEnd)
@@ -339,7 +331,6 @@ const WeightDataGrid=({getRef},props)=>{
           
           barcodeRow = apiRef.current.getRow(code)
 
-          console.log(barcodeRow)
           if(barcodeRow!=null){
             apiRef.current.updateRows([{ eItemCode: code, eBarCode: barcode}]);
             workSelect(apiRef.current,barcodeRow,dispatch)  
@@ -460,7 +451,6 @@ const WeightDataGrid=({getRef},props)=>{
 //class name을 통한 style 통제를 해야함
 const ItemList=({getRef},props,ref)=>{
     const dispatch = useDispatch();
-    console.log("아이템 리스트")
     
       return (
         <Box sx={{display:'flex', alignItems:'center',justifyContent:'center',height:'100%',width:'100%',flexFlow:"column"}}>

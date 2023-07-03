@@ -51,9 +51,6 @@ const InjectData=(props)=>{
     return (<Box></Box>)
 }
 
-function handleClick(e){
-    console.log(e)
-}
 
 
 //목표: 바코드 특정 키 누르면 바코드 listen 함수 실행

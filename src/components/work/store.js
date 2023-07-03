@@ -53,12 +53,10 @@ export default function counterReducer(state, action) {
             return newState
         case 'SET':
             eval('newState.'+action.payload.dataName+'=action.payload.value')
-            console.log(action.payload.dataName+`변경->${action.payload.value}`)
             // newState.number=action.payload.value
             return newState
         case 'PLUSNUM':
             newState.number+=action.payload.value
-            console.log(newState.number)
             return newState
         case 'WEIGHT':
             /* 
@@ -118,7 +116,7 @@ export default function counterReducer(state, action) {
             newState.targetItemName = action.payload.row.eItemName
 
 
-            console.log(`newState.selectItem->${action.payload.row.eItemName}`)
+            // console.log(`newState.selectItem->${action.payload.row.eItemName}`)
             return newState
             case 'SETIsDataSend':
                 /* 
@@ -130,7 +128,6 @@ export default function counterReducer(state, action) {
                 */
                 newState.isDataSend = action.payload.isDataSend
                 newState.isDataSendWeight=Number(action.payload.isDataSendWeight*newState.calcNum).toFixed(3)
-                console.log(newState.isDataSendWeight+"이게 잏스데이터센드")
                 // console.log(`무게값 변경 -> ${action.payload.value}`)
                 // console.log(`허용 무게 -> ${newState.allowanceWeight}`)
                 return newState

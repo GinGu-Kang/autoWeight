@@ -129,7 +129,6 @@ const Footer =()=> {
              size = "kg"
              break
     }
-    console.log(size)
 
     
     if(selectItem!={}){

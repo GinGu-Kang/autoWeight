@@ -24,11 +24,9 @@ export const socket = io(sockURL,{
 //socket 생성은 새로고침안되게
 
 const Sock = (props)=>{
-    console.log("Sock")
     
     const dispatch = useDispatch();
     
-    console.log("사이즈 변경")
     
     
     socket.emit("plan");
@@ -41,22 +39,18 @@ const Sock = (props)=>{
 
     socket.on("isConnect",res=>{
         if(res){
-            console.log("안오냐")
             dispatch({ type:"SET",payload:{dataName:'connectState',value:'정상'}})
         }
     })
     socket.on("close",socket=>{
-        console.log("종료할게")
     })
 
     socket.on("rs/Weight", socket =>{
-        console.log("rs/Weight: "+socket)
         dispatch({ type:"WEIGHT" ,payload:{value:socket}})
         
     })
 
     socket.on("disconnect", () => {
-        console.log("socket.on disconnect"); // false
         dispatch({ type:"SET",payload:{dataName:'connectState',value:'연결 확인'}})
 
       });
