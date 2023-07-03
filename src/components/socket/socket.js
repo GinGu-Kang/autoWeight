@@ -64,10 +64,6 @@ const Sock = (props)=>{
 		socket.emit("ch/weight", e.target.value);
         
 	}
-    return (<Box sx={{display:'flex'}}>
-            <button onClick={ handleRequestSocketRetry }>다시 연결</button>
-            <input type="text" onChange={(e)=> {handleChange(e)} } />
-        </Box>)
 }
 
 export default Sock
