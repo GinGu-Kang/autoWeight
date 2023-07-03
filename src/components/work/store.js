@@ -87,6 +87,7 @@ export default function counterReducer(state, action) {
             // console.log(`무게값 변경 -> ${action.payload.value}`)
             // console.log(`허용 무게 -> ${newState.allowanceWeight}`)
             return newState
+        
         case 'STACK':
             /*
             1. 현재 무게 값을 누적 중량에 대입
@@ -119,8 +120,24 @@ export default function counterReducer(state, action) {
 
             console.log(`newState.selectItem->${action.payload.row.eItemName}`)
             return newState
+            case 'SETIsDataSend':
+                /* 
+                1. 무게값을 받아옴
+                2. 누적 중량과 더해져 현재 중량
+                3. 누적, 잔여 중량 업데이트
+                4. 잔여중량 = 목표중량 - 현재 중량
+                5. 허용오차 = 목표 중량 * 허용오차 퍼센트
+                */
+                newState.isDataSend = action.payload.isDataSend
+                newState.isDataSendWeight=Number(action.payload.isDataSendWeight*newState.calcNum).toFixed(3)
+                console.log(newState.isDataSendWeight+"이게 잏스데이터센드")
+                // console.log(`무게값 변경 -> ${action.payload.value}`)
+                // console.log(`허용 무게 -> ${newState.allowanceWeight}`)
+                return newState
         default:
             return newState
+            
+
     }
 
 }

@@ -222,8 +222,9 @@ const Footer =()=> {
                     <Button 
                         onClick={function(){
                             if(selectItem.eItemName!=undefined){
-                                dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:true}})
-                                dispatch({ type:"SET" ,payload:{dataName:'isDataSendWeight',value:weight}})
+                                // dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:true}})
+                                // dispatch({ type:"SET" ,payload:{dataName:'isDataSendWeight',value:weight}})
+                                dispatch({ type:"SETIsDataSend" ,payload:{isDataSend:true,isDataSendWeight:weight}})
                             }else{
                                 alert("재료를 선택 해주세요")
                             }
@@ -236,7 +237,8 @@ const Footer =()=> {
                     <Button 
                         onClick={function(){
                             if(selectItem.eItemName!=undefined){
-                                let sendWeight = window.prompt("무게값을 입력해주세요")
+                                let sendWeight = window.prompt("무게값을 입력해주세요\n단위(KG)")
+                                // dispatch({ type:"SETIsDataSend" ,payload:{isDataSend:true,isDataSendWeight:sendWeight}})
                                 dispatch({ type:"SET" ,payload:{dataName:'isDataSend',value:true}})
                                 dispatch({ type:"SET" ,payload:{dataName:'isDataSendWeight',value:sendWeight}})
                             }else{
